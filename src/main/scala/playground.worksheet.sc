@@ -1,6 +1,12 @@
-val a = (1, 1)
-def testTuple(): (Int, Int) = {
-  (1, 1)
+val vec = Array(Array(1, 2), Array(3, 4))
+
+def changeVec(v: Array[Array[Int]]) = {
+  val vnew = v.map(_.clone)
+  vnew(0)(0) = -1
+  vnew
 }
-testTuple()._1
+vec
+
+val v1 = changeVec(vec)
+vec
 

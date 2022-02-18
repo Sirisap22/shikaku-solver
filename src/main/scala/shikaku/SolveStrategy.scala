@@ -9,6 +9,12 @@ trait SolveStrategy {
 
   def solve(numberOfRows: Int, numberOfCols: Int, clues: Vector[(Coord, Int)]): Vector[(Coord, Coord)]
 
+  def placeSquare(state: Space, position: Coord): Space = {
+    val newState = state.map(_.clone())
+    newState(position.x)(position.y) = 1
+    newState
+  }
+
   def squareShapeCombinations(size: Int): Vector[SquareShape] = {
     if (squareShapesCache.contains(size)) {
       return this.squareShapesCache(size)

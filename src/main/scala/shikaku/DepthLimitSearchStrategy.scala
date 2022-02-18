@@ -1,7 +1,20 @@
 package shikaku
 
+import scala.collection.mutable.Stack
+
 class DepthLimitSearchStrategy extends SolveStrategy {
   def solve(numberOfRows: Int, numberOfCols: Int, clues: Vector[(Coord, Int)]): Vector[(Coord, Coord)] = {
+    val limit = clues.size
+    // TODO Change current state in search space
+    // Space = board game, Clue = current clue, Square = block that place the round[state]
+    val stack = new Stack[(Space, Clue, Square)]()
+    val initialState = Array.ofDim(numberOfRows, numberOfCols)
+    val firstClue = clues(0)
+
+    while (!stack.isEmpty) {
+
+    }
+
     Vector((Coord(1, 2), Coord(1, 2)))
   }
 
