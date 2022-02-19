@@ -2,7 +2,7 @@ package shikaku
 
 import scala.collection.mutable.Stack
 
-class DepthLimitSearchStrategy extends SolveStrategy {
+class DepthFirstSearchStrategy extends SolveStrategy {
   def solve(numberOfRows: Int, numberOfCols: Int, clues: Vector[Clue]): Vector[Square] = {
     val limit = clues.size
     // TODO Change current state in search space
@@ -26,17 +26,17 @@ class DepthLimitSearchStrategy extends SolveStrategy {
         return currentPlacedSquares
       }
 
-      if (currentClueIdx < limit) {
-        val currentClue = clues(currentClueIdx)
+      // if (currentClueIdx < limit) {
+      val currentClue = clues(currentClueIdx)
 
-        // go next state
-        // gen childs
-        val shapes = this.squareShapeCombinations(currentClue.size)
-        val possibleSquares = this.possibleSquareCombinations(currentState, currentClue.position, shapes, clues)
-        possibleSquares.foreach((square) => {
-          stack.push((this.placeSquare(currentState, square), currentClueIdx + 1, currentPlacedSquares :+ square))
-        })
-      }
+      // go next state
+      // gen childs
+      val shapes = this.squareShapeCombinations(currentClue.size)
+      val possibleSquares = this.possibleSquareCombinations(currentState, currentClue.position, shapes, clues)
+      possibleSquares.foreach((square) => {
+        stack.push((this.placeSquare(currentState, square), currentClueIdx + 1, currentPlacedSquares :+ square))
+      })
+      // }
     }
 
     return Vector(new Square(Coord(-1, -1), Coord(-1,-1)))
@@ -48,17 +48,19 @@ class DepthLimitSearchStrategy extends SolveStrategy {
 object DepthLimitSearchStrategy {
   def main(args: Array[String]) {
     val input = Vector(// x, y, size
-                      (3, 0, 2),
-                      (0, 1, 3),
-                      (2, 2, 4),
-                      (3, 2, 4),
+                      (3, 0, 4),
+                      (1, 1, 2),
+                      (2, 1, 2),
+                      (4, 1, 2),
+                      (1, 2, 4),
+                      (3, 2, 2),
                       (0, 3, 2),
-                      (1, 3, 4),
-                      (4, 3, 2),
-                      (1, 4, 4)
+                      (3, 3, 2),
+                      (1, 4, 2),
+                      (4, 4, 3)
                     )
-    val clues: Vector[Clue] = for (ele <- input) yield Clue(Coord(ele._2 , ele._1), ele._3)
-    val dp = new DepthLimitSearchStrategy()
+    val clues: Vector[Clue] = for (ele <- input) yield Clue(Coord(ele._1 , ele._2), ele._3)
+    val dp = new DepthFirstSearchStrategy()
 
     // test squareShapeCombinations
     // println(dp.squareShapeCombinations(3)) 
@@ -80,17 +82,14 @@ object DepthLimitSearchStrategy {
     // possibleSquares.foreach(println)
 
     val ans = dp.solve(5, 5, clues)
-    println(ans)
-
-    //print ans
     var state = Array.ofDim[Int](5, 5)
     var symbol = 1
     for (square <- ans){
       state = dp.placeSquare(state, square, symbol)
       symbol += 1
     }
-    var s = state.map(_.mkString(" "))
-    state.map(_.mkString(" ")).zipWithIndex.foreach{
+    val s1 = for (row <- state) yield for (ele <- row) yield f"$ele%02d"
+    s1.map(_.mkString(" ")).zipWithIndex.foreach{
       case (s, idx) => println(s"row $idx - $s")
     }
 

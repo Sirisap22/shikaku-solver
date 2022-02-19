@@ -18,7 +18,7 @@ trait SolveStrategy {
 
   def placeSquare(state: Space, square: Square, symbol: Int=1): Space = {
     val newState = this.deepCopySpace(state)
-    square.getAllPoints().foreach((position) => newState(position.x)(position.y) = symbol)
+    square.getAllPoints().foreach((position) => newState(position.y)(position.x) = symbol)
     newState
   }
 

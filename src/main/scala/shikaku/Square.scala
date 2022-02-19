@@ -37,7 +37,7 @@ class Square(val topLeft: Coord, val bottomRight: Coord) {
 
   def isSquareOccupied(state: Space): Boolean = {
     val points = this.getAllPoints()
-    for (point <- points if state(point.x)(point.y) != 0) return true 
+    for (point <- points if state(point.y)(point.x) != 0) return true 
     return false
   }
 }
