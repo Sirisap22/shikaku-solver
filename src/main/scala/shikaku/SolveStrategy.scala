@@ -5,7 +5,6 @@ import scala.collection.immutable.HashMap
 trait SolveStrategy {
   type Space = Array[Array[Int]]
   var squareShapesCache: HashMap[Int, Vector[SquareShape]] = new HashMap[Int, Vector[SquareShape]]()
-  // remember is this turn placed what like (state -> Space, placed -> Square)
 
   def solve(numberOfRows: Int, numberOfCols: Int, clues: Vector[Clue]): Vector[Square]
 
@@ -85,8 +84,6 @@ trait SolveStrategy {
   def isPossibleSquare(state: Space, origin: Coord, square: Square, clues: Vector[Clue]): Boolean = { 
     // check boundaries
     if (square.isSquareOutOfBound(this.getBoundary(state))) {
-      // println(square)
-      // println("NOT PASS - boundary check")
       return false
     }
 
@@ -96,15 +93,11 @@ trait SolveStrategy {
     if clue.position != origin
     if square.isPointIntersect(clue.position)
     ) {
-      // println(s"$square, $clue")
-      // println("NOT PASS - clues check")
       return false 
     }
     
     // check placed
     if (square.isSquareOccupied(state)) {
-      // println(square)
-      // println("NOT PASS - placed check")
       return false
     }
 
@@ -114,4 +107,5 @@ trait SolveStrategy {
   def getBoundary(state: Space): Boundary = {
     Boundary(0, state.size - 1, 0, state(0).size - 1)
   }
+
 }  
