@@ -8,16 +8,14 @@ class Square(val topLeft: Coord, val bottomRight: Coord) {
   }
 
   def getAllPoints(): Vector[Coord] = {
-    val points: Vector[Coord] = for (
-      x <- Vector.range(topLeft.x, bottomRight.x);
-      y <- Vector.range(topLeft.y, bottomRight.y)
-      ) yield Coord(x, y)
-    
+    val points = for (
+    x <- Vector.range(topLeft.x, bottomRight.x+1);
+    y <- Vector.range(topLeft.y, bottomRight.y+1)
+    ) yield Coord(x, y)
     points
   }
 
   def isPointIntersect(point: Coord): Boolean = {
-    println(s"$point, $topLeft, $bottomRight")
     point.x >= this.topLeft.x &&
     point.y >= this.topLeft.y &&
     point.x <= this.bottomRight.x &&

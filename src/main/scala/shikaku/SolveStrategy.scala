@@ -7,12 +7,23 @@ trait SolveStrategy {
   var squareShapesCache: HashMap[Int, Vector[SquareShape]] = new HashMap[Int, Vector[SquareShape]]()
   // remember is this turn placed what like (state -> Space, placed -> Square)
 
-  def solve(numberOfRows: Int, numberOfCols: Int, clues: Vector[(Coord, Int)]): Vector[(Coord, Coord)]
+  def solve(numberOfRows: Int, numberOfCols: Int, clues: Vector[Clue]): Vector[Square]
 
-  def placeSquare(state: Space, position: Coord): Space = {
-    val newState = state.map(_.clone())
-    newState(position.x)(position.y) = 1
+  def isGoalState(state: Space): Boolean = {
+    for (row <- state if row.contains(0)) {
+      return false
+    }
+    true
+  }
+
+  def placeSquare(state: Space, square: Square, symbol: Int=1): Space = {
+    val newState = this.deepCopySpace(state)
+    square.getAllPoints().foreach((position) => newState(position.x)(position.y) = symbol)
     newState
+  }
+
+  def deepCopySpace(state: Space): Space = {
+    state.map(_.clone)
   }
 
   def squareShapeCombinations(size: Int): Vector[SquareShape] = {
@@ -68,7 +79,6 @@ trait SolveStrategy {
 
   def eliminateImpossibleSquares(state: Space, origin: Coord, clues: Vector[Clue], squares: Vector[Square]): Vector[Square] = {
     val possibleSquares = squares.filter((square) => this.isPossibleSquare(state, origin, square, clues))
-    println(possibleSquares.size)
     possibleSquares
   }
 
@@ -100,7 +110,7 @@ trait SolveStrategy {
 
     return true
   }
-
+  
   def getBoundary(state: Space): Boundary = {
     Boundary(0, state.size - 1, 0, state(0).size - 1)
   }
