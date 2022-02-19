@@ -1,13 +1,5 @@
 import shikaku.Square
-import shikaku.Coord
-import shikaku.DepthLimitSearchStrategy
-val dp = new DepthLimitSearchStrategy()
-val state = Array.ofDim[Int](5, 5)
-val square = new Square(Coord(2, 1), Coord(2, 2))
 
-square.getAllPoints()
-// square.getAllPoints()
-dp.placeSquare(state, square)
 
 val vec = Array(Array(1, 2), Array(3, 4))
 

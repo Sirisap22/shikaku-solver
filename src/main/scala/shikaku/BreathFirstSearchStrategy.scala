@@ -3,8 +3,6 @@ import scala.collection.mutable.Queue
 
 class BreathFirstSearchStrategy extends SolveStrategy {
  def solve(numberOfRows: Int, numberOfCols: Int, clues: Vector[Clue]): Vector[Square] = {
-    val limit = clues.size
-
     // Space = board game, Clue = current clue, Square = block that place the round[state]
     val queue = new Queue[(Space, Int, Vector[Square])]()
 
@@ -33,7 +31,7 @@ class BreathFirstSearchStrategy extends SolveStrategy {
       })
     }
 
-    return Vector(new Square(Coord(-1, -1), Coord(-1,-1)))
+    return Vector[Square]()
   } 
 }
 
@@ -71,7 +69,7 @@ object BreathFirstSearchStrategy {
 
       // Utils.memory()
     }
-    
+
     println(s"Runtime: ${time/1000000} ms")
   
 

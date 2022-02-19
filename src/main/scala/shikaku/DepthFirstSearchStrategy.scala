@@ -4,8 +4,6 @@ import scala.collection.mutable.Stack
 
 class DepthFirstSearchStrategy extends SolveStrategy {
   def solve(numberOfRows: Int, numberOfCols: Int, clues: Vector[Clue]): Vector[Square] = {
-    val limit = clues.size
-
     // Space = board game, Clue = current clue, Square = block that place the round[state]
     val stack = new Stack[(Space, Int, Vector[Square])]()
 
@@ -34,7 +32,7 @@ class DepthFirstSearchStrategy extends SolveStrategy {
       })
     }
 
-    return Vector(new Square(Coord(-1, -1), Coord(-1,-1)))
+    return Vector[Square]()
   }
 
 
