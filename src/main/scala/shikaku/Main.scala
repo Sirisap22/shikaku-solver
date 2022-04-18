@@ -23,9 +23,12 @@ object Main {
     val clues: Vector[Clue] = for (ele <- input) yield Clue(Coord(ele._1 , ele._2), ele._3)
     val depthSolver = new Solver(7, 7, clues, new DepthFirstSearchStrategy())
     val breathSolver = new Solver(7, 7, clues, new BreathFirstSearchStrategy())
+    // val heuristicSolver = new Solver(7, 7, clues, new HeuristicSearchStrategy())
 
-    depthSolver.timeIt(100)
     breathSolver.timeIt(100)
+    depthSolver.timeIt(100)
+    // heuristicSolver.timeIt(100)
+
     // Utils.memory()
 
   }

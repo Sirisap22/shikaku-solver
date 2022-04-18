@@ -2,43 +2,46 @@ package shikaku
 
 import scala.collection.mutable.Stack
 
-class DepthFirstSearchStrategy extends SolveStrategy {
-  def solve(numberOfRows: Int, numberOfCols: Int, clues: Vector[Clue]): Vector[Square] = {
-    // Space = board game, Clue = current clue, Square = block that place the round[state]
-    val stack = new Stack[(Space, Int, Vector[Square])]()
+class SimpleHeuristicSearchStrategy extends SolveStrategy {
+    override def solve(numberOfRows: Int, numberOfCols: Int, _clues: Vector[Clue]): Vector[Square] = {
+      // Space = board game, Clue = current clue, Square = block that place the round[state]
 
-    val initialState = Array.ofDim[Int](numberOfRows, numberOfCols)
-    val initialClueIdx = 0
-    val placedSquares = Vector[Square]()
+      // heuristic
+      val clues = _clues.sortBy(x => x.size)(Ordering[Int].reverse)
+      
+      val stack = new Stack[(Space, Int, Vector[Square])]()
 
-    stack.push((initialState, initialClueIdx, placedSquares))
+      val initialState = Array.ofDim[Int](numberOfRows, numberOfCols)
+      val initialClueIdx = 0
+      val placedSquares = Vector[Square]()
 
-    while (!stack.isEmpty) {
-      val (currentState, currentClueIdx, currentPlacedSquares) = stack.pop()
+      stack.push((initialState, initialClueIdx, placedSquares))
 
-      // check if goalstate
-      if (this.isGoalState(currentState)) {
-        return currentPlacedSquares
+      while (!stack.isEmpty) {
+        val (currentState, currentClueIdx, currentPlacedSquares) = stack.pop()
+
+        // check if goalstate
+        if (this.isGoalState(currentState)) {
+          return currentPlacedSquares
+        }
+
+        val currentClue = clues(currentClueIdx)
+
+        // go next state
+        // gen childs
+        val shapes = this.squareShapeCombinations(currentClue.size)
+        val possibleSquares = this.possibleSquareCombinations(currentState, currentClue.position, shapes, clues)
+
+        possibleSquares.foreach((square) => {
+          stack.push((this.placeSquare(currentState, square), currentClueIdx + 1, currentPlacedSquares :+ square))
+        })
       }
 
-      val currentClue = clues(currentClueIdx)
-
-      // go next state
-      // gen childs
-      val shapes = this.squareShapeCombinations(currentClue.size)
-      val possibleSquares = this.possibleSquareCombinations(currentState, currentClue.position, shapes, clues)
-      possibleSquares.foreach((square) => {
-        stack.push((this.placeSquare(currentState, square), currentClueIdx + 1, currentPlacedSquares :+ square))
-      })
-    }
-
-    return Vector[Square]()
+      return Vector[Square]()
   }
-
-
 }
 
-object DepthFirstSearchStrategy {
+object SimpleHeuristicSearchStrategy {
   def main(args: Array[String]) {
     val input = Vector(
       (0, 0, 10),
@@ -223,15 +226,15 @@ object DepthFirstSearchStrategy {
       (18, 25, 3)
       )
     val clues: Vector[Clue] = for (ele <- input) yield Clue(Coord(ele._1 , ele._2), ele._3)
-    val dp = new DepthFirstSearchStrategy()
+    val sh = new SimpleHeuristicSearchStrategy()
     
     val time = Utils.averageRuntimeInNanoSec(1) {
 
-      val ans = dp.solve(30, 30, clues)
+      val ans = sh.solve(30, 30, clues)
       var state = Array.ofDim[Int](30, 30)
       var symbol = 1
       for (square <- ans){
-        state = dp.placeSquare(state, square, symbol)
+        state = sh.placeSquare(state, square, symbol)
         symbol += 1
       }
       val s1 = for (row <- state) yield for (ele <- row) yield f"$ele%02d"
