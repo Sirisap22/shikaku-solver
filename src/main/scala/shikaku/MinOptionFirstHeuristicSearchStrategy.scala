@@ -34,7 +34,6 @@ class MinOptionFirstHeuristicSearchStrategy extends SolveStrategy {
           stack.push((this.placeSquare(currentState, square), nextClues, currentPlacedSquares :+ square))
         })
 
-        
       }
 
       return Vector[Square]()

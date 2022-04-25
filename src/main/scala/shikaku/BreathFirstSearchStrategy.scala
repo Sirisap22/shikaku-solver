@@ -37,54 +37,44 @@ class BreathFirstSearchStrategy extends SolveStrategy {
 
 object BreathFirstSearchStrategy {
   def main(args: Array[String]) {
-    val input = Vector(
-(0, 0, 5),
-(6, 0, 8),
-(5, 0, 20),
-(6, 3, 17),
-(10, 3, 5),
-(14, 0, 2),
-(7, 3, 2),
-(16, 0, 4),
-(16, 2, 4),
-(14, 2, 2),
-(14, 1, 2),
-(14, 3, 17),
-(18, 3, 17),
-(15, 3, 17),
-(10, 11, 8),
-(9, 3, 17),
-(16, 1, 4),
-(13, 11, 9),
-(16, 3, 17),
-(10, 19, 3),
-(0, 1, 5),
-(19, 3, 17),
-(12, 11, 8),
-(11, 11, 8),
-(6, 1, 8),
-(13, 3, 8),
-(17, 3, 17),
-(6, 2, 8),
-(12, 3, 8),
-(7, 6, 14),
-(7, 5, 2),
-(0, 2, 12),
-(10, 8, 3),
-(7, 4, 2),
-(11, 3, 5),
-(8, 6, 14),
-(11, 8, 3),
-(2, 2, 18),
-(0, 14, 4),
-(0, 18, 2),
-(1, 14, 4),
-(3, 2, 15),
-(3, 17, 3),
-(0, 19, 2),
-(4, 2, 15),
-(1, 2, 12),
-(4, 17, 3)
+    val input = Vector((1, 0, 5),
+    (1, 1, 3),
+    (3, 1, 2),
+    (3, 2, 4),
+    (5, 2, 9),
+    (5, 3, 4),
+    (7, 3, 2),
+    (7, 4, 6),
+    (1, 5, 3),
+    (2, 5, 8),
+    (1, 6, 4),
+    (2, 6, 4),
+    (0, 9, 8),
+    (4, 7, 4),
+    (4, 8, 4),
+    (5, 7, 2),
+    (5, 8, 2),
+    (7, 9, 6),
+    (8, 9, 8),
+    (9, 0, 10),
+    (10, 0, 4),
+    (10, 5, 3),
+    (10, 6, 4),
+    (12, 6, 4),
+    (12, 7, 6),
+    (14, 7, 6),
+    (14, 8, 6),
+    (16, 8, 6),
+    (16, 9, 2),
+    (17, 0, 4),
+    (12, 1, 2),
+    (13, 1, 2),
+    (12, 2, 9),
+    (13, 2, 6),
+    (15, 3, 6),
+    (16, 3, 6),
+    (15, 4, 2),
+    (16, 4, 4)
 )
     val clues: Vector[Clue] = for (ele <- input) yield Clue(Coord(ele._1 , ele._2), ele._3)
     val bt = new BreathFirstSearchStrategy()
@@ -92,8 +82,8 @@ object BreathFirstSearchStrategy {
     
 
     val time = Utils.averageRuntimeInNanoSec(1) {
-      val ans = bt.solve(20, 20, clues)
-      var state = Array.ofDim[Int](20, 20)
+      val ans = bt.solve(10, 18, clues)
+      var state = Array.ofDim[Int](10, 18)
       var symbol = 1
       for (square <- ans){
         state = bt.placeSquare(state, square, symbol)
@@ -104,7 +94,7 @@ object BreathFirstSearchStrategy {
         case (s, idx) => println(s"row $idx - $s")
       }
 
-      // Utils.memory()
+      Utils.memory()
     }
 
     println(s"Runtime: ${time/1000000} ms")

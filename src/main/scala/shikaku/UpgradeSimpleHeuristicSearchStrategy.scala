@@ -2,13 +2,13 @@ package shikaku
 
 import scala.collection.mutable.Stack
 
-class SimpleHeuristicSearchStrategy extends SolveStrategy {
-    override def solve(numberOfRows: Int, numberOfCols: Int, _clues: Vector[Clue]): Vector[Square] = {
+class UpgradeSimpleHeuristicSearchStrategy extends SolveStrategy {
+      override def solve(numberOfRows: Int, numberOfCols: Int, _clues: Vector[Clue]): Vector[Square] = {
       // Space = board game, Clue = current clue, Square = block that place the round[state]
 
       // heuristic
       val clues = _clues.sortBy(x => x.size)(Ordering[Int].reverse)
-      
+
       val stack = new Stack[(Space, Int, Vector[Square])]()
 
       val initialState = Array.ofDim[Int](numberOfRows, numberOfCols)
@@ -31,17 +31,46 @@ class SimpleHeuristicSearchStrategy extends SolveStrategy {
         // gen childs
         val shapes = this.squareShapeCombinations(currentClue.size)
         val possibleSquares = this.possibleSquareCombinations(currentState, currentClue.position, shapes, clues)
+        val sortedPossibleSquares = possibleSquares.sortBy((square) => this.heuristic(clues.slice(currentClueIdx, clues.size), square))(Ordering[Float].reverse)
 
-        possibleSquares.foreach((square) => {
+        sortedPossibleSquares.foreach((square) => {
           stack.push((this.placeSquare(currentState, square), currentClueIdx + 1, currentPlacedSquares :+ square))
         })
       }
 
       return Vector[Square]()
   }
+
+  // def heuristic(clues: Vector[Clue], square: Square): Float = {
+  //   val pointsInSquare = square.getAllPoints();
+  //   val pointsInClue = clues.map(clues => clues.position)
+  //   var sum = 0f
+  //   for (point <- pointsInSquare) {
+  //     val surroundingPoints = surroudingPoints(point);
+  //     for (surroundingPoint <- surroundingPoints) {
+  //       if (pointsInClue.contains(surroundingPoint)) {
+  //         sum += 1f
+  //       }
+  //     }
+  //   }
+
+  //   val averageSurroundingPointThatContainClue = sum.toFloat/pointsInSquare.size.toFloat
+  //   val heuristicValue = averageSurroundingPointThatContainClue
+  //   return heuristicValue
+  // }
+
+  def heuristic(clues: Vector[Clue], square: Square): Float = {
+    val surroundingPoints = square.getSurroundingPonts()
+    val pointsInClue = clues.map(clues => clues.position)
+    var sum = 0f
+    surroundingPoints.foreach((point) => {
+      if (pointsInClue.contains(point)) sum += 1f
+    });
+    return sum/surroundingPoints.size.toFloat
+  }
 }
 
-object SimpleHeuristicSearchStrategy {
+object UpgradeSimpleHeuristicSearchStrategy {
   def main(args: Array[String]) {
 //     val input = Vector((1, 0, 5),
 //     (1, 1, 3),
@@ -135,7 +164,7 @@ object SimpleHeuristicSearchStrategy {
     (4, 6, 9)
 )
     val clues: Vector[Clue] = for (ele <- input) yield Clue(Coord(ele._1 , ele._2), ele._3)
-    val sh = new SimpleHeuristicSearchStrategy()
+    val sh = new UpgradeSimpleHeuristicSearchStrategy()
     
     val time = Utils.averageRuntimeInNanoSec(1) {
 
