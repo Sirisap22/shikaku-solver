@@ -31,7 +31,8 @@ class UpgradeSimpleHeuristicSearchStrategy extends SolveStrategy {
         // gen childs
         val shapes = this.squareShapeCombinations(currentClue.size)
         val possibleSquares = this.possibleSquareCombinations(currentState, currentClue.position, shapes, clues)
-        val sortedPossibleSquares = possibleSquares.sortBy((square) => this.heuristic(clues.slice(currentClueIdx, clues.size), square))(Ordering[Float].reverse)
+        // heuristic sort มากไปน้อย จะได้ไม่ต้อง reverse อีกรอบ
+        val sortedPossibleSquares = possibleSquares.sortBy((square) => this.heuristic(clues.slice(currentClueIdx, clues.size), square))(Ordering[Int].reverse)
 
         sortedPossibleSquares.foreach((square) => {
           stack.push((this.placeSquare(currentState, square), currentClueIdx + 1, currentPlacedSquares :+ square))
@@ -41,32 +42,14 @@ class UpgradeSimpleHeuristicSearchStrategy extends SolveStrategy {
       return Vector[Square]()
   }
 
-  // def heuristic(clues: Vector[Clue], square: Square): Float = {
-  //   val pointsInSquare = square.getAllPoints();
-  //   val pointsInClue = clues.map(clues => clues.position)
-  //   var sum = 0f
-  //   for (point <- pointsInSquare) {
-  //     val surroundingPoints = surroudingPoints(point);
-  //     for (surroundingPoint <- surroundingPoints) {
-  //       if (pointsInClue.contains(surroundingPoint)) {
-  //         sum += 1f
-  //       }
-  //     }
-  //   }
-
-  //   val averageSurroundingPointThatContainClue = sum.toFloat/pointsInSquare.size.toFloat
-  //   val heuristicValue = averageSurroundingPointThatContainClue
-  //   return heuristicValue
-  // }
-
-  def heuristic(clues: Vector[Clue], square: Square): Float = {
+  def heuristic(clues: Vector[Clue], square: Square): Int = {
     val surroundingPoints = square.getSurroundingPonts()
     val pointsInClue = clues.map(clues => clues.position)
-    var sum = 0f
+    var sum = 0
     surroundingPoints.foreach((point) => {
-      if (pointsInClue.contains(point)) sum += 1f
+      if (pointsInClue.contains(point)) sum += 1
     });
-    return sum/surroundingPoints.size.toFloat
+    return sum
   }
 }
 
