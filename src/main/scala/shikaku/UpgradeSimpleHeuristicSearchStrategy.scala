@@ -32,7 +32,7 @@ class UpgradeSimpleHeuristicSearchStrategy extends SolveStrategy {
         val shapes = this.squareShapeCombinations(currentClue.size)
         val possibleSquares = this.possibleSquareCombinations(currentState, currentClue.position, shapes, clues)
         // heuristic sort มากไปน้อย จะได้ไม่ต้อง reverse อีกรอบ
-        val sortedPossibleSquares = possibleSquares.sortBy((square) => this.heuristic(clues.slice(currentClueIdx, clues.size), square))(Ordering[Int].reverse)
+        val sortedPossibleSquares = possibleSquares.sortBy((square) => this.heuristic(clues.slice(currentClueIdx, clues.size), square))(Ordering[Float].reverse)
 
         sortedPossibleSquares.foreach((square) => {
           stack.push((this.placeSquare(currentState, square), currentClueIdx + 1, currentPlacedSquares :+ square))
@@ -42,58 +42,19 @@ class UpgradeSimpleHeuristicSearchStrategy extends SolveStrategy {
       return Vector[Square]()
   }
 
-  def heuristic(clues: Vector[Clue], square: Square): Int = {
+  def heuristic(clues: Vector[Clue], square: Square): Float = {
     val surroundingPoints = square.getSurroundingPonts()
     val pointsInClue = clues.map(clues => clues.position)
-    var sum = 0
+    var sum = 0f
     surroundingPoints.foreach((point) => {
-      if (pointsInClue.contains(point)) sum += 1
+      if (pointsInClue.contains(point)) sum += 1f
     });
-    return sum
+    return sum/surroundingPoints.size.toFloat
   }
 }
 
 object UpgradeSimpleHeuristicSearchStrategy {
   def main(args: Array[String]) {
-//     val input = Vector((1, 0, 5),
-//     (1, 1, 3),
-//     (3, 1, 2),
-//     (3, 2, 4),
-//     (5, 2, 9),
-//     (5, 3, 4),
-//     (7, 3, 2),
-//     (7, 4, 6),
-//     (1, 5, 3),
-//     (2, 5, 8),
-//     (1, 6, 4),
-//     (2, 6, 4),
-//     (0, 9, 8),
-//     (4, 7, 4),
-//     (4, 8, 4),
-//     (5, 7, 2),
-//     (5, 8, 2),
-//     (7, 9, 6),
-//     (8, 9, 8),
-//     (9, 0, 10),
-//     (10, 0, 4),
-//     (10, 5, 3),
-//     (10, 6, 4),
-//     (12, 6, 4),
-//     (12, 7, 6),
-//     (14, 7, 6),
-//     (14, 8, 6),
-//     (16, 8, 6),
-//     (16, 9, 2),
-//     (17, 0, 4),
-//     (12, 1, 2),
-//     (13, 1, 2),
-//     (12, 2, 9),
-//     (13, 2, 6),
-//     (15, 3, 6),
-//     (16, 3, 6),
-//     (15, 4, 2),
-//     (16, 4, 4)
-// )
 //     val input = Vector((0, 0, 9),
 //     (4, 0, 12),
 //     (7, 0, 5),
